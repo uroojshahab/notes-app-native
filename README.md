@@ -1,50 +1,75 @@
-# Welcome to your Expo app 👋
+# 📝 Notes App with Expo Router
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a simple yet functional Notes App built using **React Native** and **Expo Router**. The app allows users to add, view, and delete personal notes, with data stored locally on the device.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+- 📄 Create a new note with a title and content
+- 📋 View list of all saved notes
+- 🗑 Delete any note
+- 🔗 Navigate to a detailed screen for each note
+- 💾 Local data persistence using AsyncStorage
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
+## 🛠 Tech Stack
 
-In the output, you'll find options to open the app in a
+- **React Native**
+- **Expo**
+- **expo-router** for routing and navigation
+- **AsyncStorage** (via `@react-native-async-storage/async-storage`) for persistent local storage
+- **UUID** (`uuid` package) for generating unique note IDs
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+---
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
-## Get a fresh project
 
-When you're ready, run:
+## 🧠 How It Works
 
-```bash
-npm run reset-project
-```
+### ➕ Adding a Note
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+- Input fields for **title** and **content**
+- A "Add Note" button calls `addNote()`:
+  - Generates a unique ID with `uuidv4()`
+  - Creates a new `Note` object
+  - Updates local state with `setNotes(...)`
+  - Saves updated notes to local storage via `saveNotes(...)`
 
-## Learn more
+### 📦 Data Storage
 
-To learn more about developing your project with Expo, look at the following resources:
+- Notes are saved and retrieved using `AsyncStorage`:
+  - `saveNotes(notes: Note[])`: saves note array as JSON
+  - `loadNotes(): Promise<Note[]>`: loads notes from storage
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 📜 Viewing Notes
 
-## Join the community
+- All notes are listed using a `ScrollView`
+- Each note is rendered using the `NoteItem` component
+- Tapping a note triggers navigation to the note detail screen via:
 
-Join our community of developers creating universal apps.
+```tsx
+router.push(`/(tabs)/note/${note.id}`);
+  🧭 Navigation
+expo-router is used for file-based routing
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+router.push(...) navigates to a note’s detail screen
+
+[id].tsx uses useLocalSearchParams() to extract the dynamic route parameter
+
+❌ Deleting Notes
+deleteNote(id: string) filters out the deleted note
+
+Updates local state and saves the new list using saveNotes(...)
+
+🧪 Functions Used
+useState and useEffect (React hooks)
+
+useRouter from expo-router
+
+useLocalSearchParams for dynamic route parameters
+
+uuidv4() for generating unique note IDs
+
+AsyncStorage.setItem() and .getItem() for saving/loading notes
